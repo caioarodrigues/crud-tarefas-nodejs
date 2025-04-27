@@ -1,4 +1,14 @@
 import inquirer from "inquirer";
+import TaskService from "./services/Task.service.js";
+import TaskRepository from "./repository/Task.repository.js";
+
+const taskService = new TaskService(new TaskRepository());
+
+const task = {
+  title: "Test Task",
+  description: "This is a test task",
+  status: "pending",
+};
 
 inquirer
   .prompt([
@@ -10,5 +20,18 @@ inquirer
     },
   ])
   .then((answer) => {
-    console.log(answer.choice);
+    switch (answer.choice) {
+      case "create": {
+        const createdTask = taskService.createTask(task);
+        console.log("Task created:", createdTask);
+        break;
+      }
+      case "list": {
+        const tasks = taskService.listTasks();
+        console.log("Tasks:", tasks);
+        break;
+      }
+      default:
+        console.log("Invalid choice");
+    }
   });
