@@ -1,4 +1,4 @@
-import Task from "../../models/Task.model.js";
+import Task from "../../models/Task.model.ts";
 
 export default class CreateTaskUseCase {
   constructor(taskRepository) {

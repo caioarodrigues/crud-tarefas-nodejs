@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
-import TaskService from "./services/Task.service.js";
-import TaskRepository from "./repository/Task.repository.js";
+import TaskService from "./services/Task.service.ts";
+import TaskRepository from "./repository/Task.repository.ts";
 
 const taskService = new TaskService(new TaskRepository());
 

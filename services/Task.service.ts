@@ -1,6 +1,6 @@
-import CreateTaskUseCase from "../useCases/task/CreateTask.js";
-import ListTaskUseCase from "../useCases/task/ListTask.js";
-import RemoveTaskUseCase from "../useCases/task/RemoveTask.js";
+import CreateTaskUseCase from "../useCases/task/CreateTask.ts";
+import ListTaskUseCase from "../useCases/task/ListTask.ts";
+import RemoveTaskUseCase from "../useCases/task/RemoveTask.ts";
 
 export default class TaskService {
   constructor(taskRepository) {
