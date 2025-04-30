@@ -5,20 +5,24 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node index.ts"
+    "start": "npx ts-node -r tsconfig-paths/register index.ts",
+    "dev": "node --disable-warning=ExperimentalWarning -r ts-node/register -r tsconfig-paths/register src/index.ts",
+    "dev:esm": "ts-node --esm -r tsconfig-paths/register src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "inquirer": "^12.6.0"
+    "inquirer": "^12.6.0",
+    "tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
     "eslint": "^9.25.1",
     "globals": "^16.0.0",
     "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
