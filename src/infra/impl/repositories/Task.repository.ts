@@ -2,12 +2,15 @@ import {
   ICreateTaskRepository,
   IListTaskRepository,
   IRemoveTaskRepository,
+  ITaskRepository,
 } from "@/domain/repositories/Task.repository.js";
 import { Task } from "@/domain/entities/Task.js";
 
-export class CreateTaskRepository implements ICreateTaskRepository {
-  private tasks: Task[] = [];
+export class TaskRepository implements ITaskRepository {
+  constructor(protected tasks: Task[] = []) { }
+}
 
+export class CreateTaskRepository extends TaskRepository implements ICreateTaskRepository {
   async execute(task: Task): Promise<Task> {
     this.tasks.push(task);
 
@@ -15,9 +18,7 @@ export class CreateTaskRepository implements ICreateTaskRepository {
   }
 }
 
-export class RemoveTaskRepository implements IRemoveTaskRepository {
-  private tasks: Task[] = [];
-
+export class RemoveTaskRepository extends TaskRepository implements IRemoveTaskRepository {
   async execute(id: number): Promise<Task> {
     const taskIndex = this.tasks.findIndex((task) => task.id === id);
 
@@ -31,9 +32,7 @@ export class RemoveTaskRepository implements IRemoveTaskRepository {
   }
 }
 
-export class ListTaskRepository implements IListTaskRepository {
-  private tasks: Task[] = [];
-
+export class ListTaskRepository extends TaskRepository implements IListTaskRepository {
   async execute(): Promise<Task[]> {
     return this.tasks;
   }
