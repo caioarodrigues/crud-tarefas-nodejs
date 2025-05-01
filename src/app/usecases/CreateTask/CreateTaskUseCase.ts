@@ -1,7 +1,7 @@
-import { ICreateTaskUseCase } from "@/app/usecases/CreateTask/ICreateTaskUseCase";
-import { CreateTaskDTO } from "@/app/usecases/CreateTask/CreateTaskDTO";
-import { Task } from "@/domain/entities/Task";
-import { ICreateTaskRepository } from "@/domain/repositories/Task.repository";
+import { ICreateTaskUseCase } from "@/app/usecases/CreateTask/ICreateTaskUseCase.js";
+import { CreateTaskDTO } from "@/app/usecases/CreateTask/CreateTaskDTO.js";
+import { Task } from "@/domain/entities/Task.js";
+import { ICreateTaskRepository } from "@/domain/repositories/Task.repository.js";
 
 export class CreateTaskUseCase implements ICreateTaskUseCase {
   private createTaskRepository: ICreateTaskRepository;

@@ -2,8 +2,8 @@ import {
   ICreateTaskRepository,
   IListTaskRepository,
   IRemoveTaskRepository,
-} from "@/domain/repositories/Task.repository";
-import { Task } from "@/domain/entities/Task";
+} from "@/domain/repositories/Task.repository.js";
+import { Task } from "@/domain/entities/Task.js";
 
 export class CreateTaskRepository implements ICreateTaskRepository {
   private tasks: Task[] = [];

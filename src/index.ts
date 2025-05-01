@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
-import { Task } from "@/domain/entities/Task";
-import { CreateTaskUseCase } from "./app/usecases/CreateTask/CreateTaskUseCase";
-import { CreateTaskRepository } from "./infra/impl/repositories/Task.repository";
+import { Task } from "@/domain/entities/Task.js";
+import { CreateTaskUseCase } from "./app/usecases/CreateTask/CreateTaskUseCase.js";
+import { CreateTaskRepository } from "./infra/impl/repositories/Task.repository.js";
 
 const createTaskUseCase = new CreateTaskUseCase(new CreateTaskRepository());
 
@@ -26,8 +26,11 @@ inquirer
   .then((answer) => {
     switch (answer.choice) {
       case "create": {
-        const createdTask = createTaskUseCase.execute(task);
-        console.log("Task created: \n", createdTask);
+        const createdTask = createTaskUseCase.execute(task)
+          .then((task) => {
+            console.log("Task created: \n", task);
+          });
+
         break;
       }
       case "list": {

@@ -5,9 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx ts-node -r tsconfig-paths/register index.ts",
-    "dev": "node --disable-warning=ExperimentalWarning -r ts-node/register -r tsconfig-paths/register src/index.ts",
-    "dev:esm": "ts-node --esm -r tsconfig-paths/register src/index.ts"
+    "dev": "node --import ./tsconfig-paths-bootstrap.js --loader ts-node/esm src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,14 +13,18 @@
   "description": "",
   "dependencies": {
     "inquirer": "^12.6.0",
-    "tsconfig-paths": "^4.2.0"
+    "module-alias": "^2.2.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
+    "@types/node": "^22.15.3",
     "eslint": "^9.25.1",
     "globals": "^16.0.0",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.1"
   }
 }

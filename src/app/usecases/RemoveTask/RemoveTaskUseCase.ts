@@ -1,7 +1,7 @@
-import { IRemoveTaskUseCase } from "./IRemoveTaskUseCase";
-import { IRemoveTaskRepository } from "../../../domain/repositories/Task.repository";
-import { Task } from "../../../domain/entities/Task";
-import { RemoveTaskRepository } from "../../../infra/impl/repositories/Task.repository";
+import { IRemoveTaskUseCase } from "./IRemoveTaskUseCase.js";
+import { IRemoveTaskRepository } from "../../../domain/repositories/Task.repository.js";
+import { Task } from "../../../domain/entities/Task.js";
+import { RemoveTaskRepository } from "../../../infra/impl/repositories/Task.repository.js";
 
 export class RemoveTaskUseCase implements IRemoveTaskUseCase {
   private removeTaskRepository: IRemoveTaskRepository;

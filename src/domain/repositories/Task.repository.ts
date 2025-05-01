@@ -1,4 +1,4 @@
-import { Task } from "@/domain/entities/Task";
+import { Task } from "@/domain/entities/Task.js";
 
 export interface ICreateTaskRepository {
   execute(task: Task): Promise<Task>;
