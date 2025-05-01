@@ -5,9 +5,15 @@ import { CreateTaskRepository } from "@/infra/impl/repositories/Task.repository.
 import { validOptions } from "@/domain/constants/options.js";
 import { ListTaskCLIUseCase } from "./app/usecases/ListTask/CLI/ListTaskCLIUseCase";
 import { ListTaskRepository } from "@/infra/impl/repositories/Task.repository.js";
+import { resolveFilePath } from "@/app/utils/FileOperations";
+import { RemoveTaskUseCase } from "./app/usecases/RemoveTask/RemoveTaskUseCase";
+import { RemoveTaskRepository } from "@/infra/impl/repositories/Task.repository.js";
 
 const createTaskUseCase = new CreateTaskUseCase(new CreateTaskRepository());
 const listTaskUseCase = new ListTaskCLIUseCase(new ListTaskRepository());
+const removeTaskUseCase = new RemoveTaskUseCase(new RemoveTaskRepository());
+
+console.log(resolveFilePath({ fileName: "tasks", fileFormat: ".json" }));
 
 const task: Task = {
   title: "Test Task",
@@ -42,12 +48,24 @@ async function main() {
     }
 
     if (choice === "create") {
-      const createdTask = await createTaskUseCase.execute(task);
-      console.log("Task created: \n", createdTask);
+      await createTaskUseCase.execute(task);
     }
 
     if (choice === "list") {
       listTaskUseCase.execute();
+    }
+
+    if (choice === "remove") {
+      const { id } = await inquirer.prompt([
+        {
+          type: "input",
+          name: "id",
+          message: "Enter the ID of the task to remove",
+        },
+      ]);
+
+      const removedTask = await removeTaskUseCase.execute(id);
+      console.log("Task removed:", removedTask);
     }
   }
 }

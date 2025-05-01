@@ -2,38 +2,63 @@ import {
   ICreateTaskRepository,
   IListTaskRepository,
   IRemoveTaskRepository,
-  ITaskRepository,
 } from "@/domain/repositories/Task.repository.js";
 import { Task } from "@/domain/entities/Task.js";
+import { verifyExistenceOfFile, createFile, readFile, removeFile } from "@/app/utils/FileOperations";
+import { dbFileName, dbFileFormat } from "@/domain/constants/files";
 
-export class TaskRepository implements ITaskRepository {
-  constructor(protected tasks: Task[] = []) { }
-}
+let localTasks: Task[] = [];
 
-export class CreateTaskRepository extends TaskRepository implements ICreateTaskRepository {
+export class CreateTaskRepository implements ICreateTaskRepository {
   async execute(task: Task): Promise<Task> {
-    this.tasks.push(task);
+    const dbExists = await verifyExistenceOfFile({ fileFormat: dbFileFormat, fileName: dbFileName });
+
+    localTasks.push(task);
+
+    if (!dbExists) {
+      await createFile({ fileFormat: dbFileFormat, fileName: dbFileName, content: JSON.stringify(localTasks, null, 2) });
+      return task;
+    }
+
+    await removeFile({ fileFormat: dbFileFormat, fileName: dbFileName });
+    await createFile({ fileFormat: dbFileFormat, fileName: dbFileName, content: JSON.stringify(localTasks, null, 2) });
 
     return task;
   }
 }
 
-export class RemoveTaskRepository extends TaskRepository implements IRemoveTaskRepository {
+export class RemoveTaskRepository implements IRemoveTaskRepository {
   async execute(id: number): Promise<Task> {
-    const taskIndex = this.tasks.findIndex((task) => task.id === id);
+    const dbExists = await verifyExistenceOfFile({ fileFormat: dbFileFormat, fileName: dbFileName });
 
-    if (taskIndex === -1) {
-      throw new Error("Task not found");
+    if (!dbExists) {
+      throw new Error("Database does not exist");
     }
 
-    const [removedTask] = this.tasks.splice(taskIndex, 1);
+    const filteredTasks = localTasks.filter((task) => task.id !== id);
+    const taskToRemove = localTasks.find((task) => task.id === id);
 
-    return removedTask;
+    console.log("Filtered tasks:", filteredTasks);
+    console.log("Tasks to remove:", taskToRemove);
+    localTasks = filteredTasks;
+
+    await removeFile({ fileFormat: dbFileFormat, fileName: dbFileName });
+    await createFile({ fileFormat: dbFileFormat, fileName: dbFileName, content: JSON.stringify(localTasks, null, 2) });
+
+    return taskToRemove as Task;
   }
 }
 
-export class ListTaskRepository extends TaskRepository implements IListTaskRepository {
+export class ListTaskRepository implements IListTaskRepository {
   async execute(): Promise<Task[]> {
-    return this.tasks;
+    const dbExists = await verifyExistenceOfFile({ fileFormat: dbFileFormat, fileName: dbFileName });
+
+    if (!dbExists) {
+      return [];
+    }
+
+    const tasks = await readFile({ fileFormat: dbFileFormat, fileName: dbFileName });
+
+    return tasks;
   }
 }
