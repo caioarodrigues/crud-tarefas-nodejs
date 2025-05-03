@@ -5,5 +5,4 @@ export interface TaskDTO {
   status: string;
   createdAt: Date;
   updatedAt: Date | null;
-  done: boolean;
 }

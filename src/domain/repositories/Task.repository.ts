@@ -18,3 +18,11 @@ export interface IListTaskRepository {
 export interface IGetTaskCountRepository {
   execute(): Promise<number>;
 }
+
+export interface ISetTaskDoneRepository {
+  execute(id: number): Promise<Task | null>;
+}
+
+export interface IFilterTaskByKeywordRepository {
+  execute(keyword: string): Promise<ListTaskDTO>;
+}

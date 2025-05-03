@@ -1,14 +1,16 @@
 import {
   ICreateTaskRepository,
+  IFilterTaskByKeywordRepository,
   IListTaskRepository,
   IRemoveTaskRepository,
+  ISetTaskDoneRepository,
 } from "@/domain/repositories/Task.repository.js";
 import { Task } from "@/domain/entities/Task.js";
-import { verifyExistenceOfFile, createFile, readFile, removeFile } from "@/app/utils/FileOperations";
+import { verifyExistenceOfFile, createFile, removeFile } from "@/app/utils/FileOperations";
 import { dbFileName, dbFileFormat } from "@/domain/constants/files";
-import { TaskDTO } from "@/app/DTOs/TaskDTO";
 import { ListTaskDTO } from "@/app/DTOs/ListTaskDTO";
 import { FileOperations } from "@/app/utils/FileOperations";
+import { TaskDTO } from "@/app/DTOs/TaskDTO";
 
 const fileOperations = new FileOperations();
 const localTasks: Task[] = [];
@@ -24,10 +26,8 @@ export class CreateTaskRepository implements ICreateTaskRepository {
       return task;
     }
 
-    const tasks: TaskDTO[] = await readFile({ fileFormat: dbFileFormat, fileName: dbFileName });
     // const loadedTasks = tasks.map((task) => new Task(task));
 
-    console.log("[tasks]", tasks.length, tasks[0].id);
     // console.log("[loadedTasks]", loadedTasks);
 
     await removeFile({ fileFormat: dbFileFormat, fileName: dbFileName });
@@ -51,7 +51,7 @@ export class RemoveTaskRepository implements IRemoveTaskRepository {
       return null;
     }
 
-    const indexTaskToRemove = localTasks.findIndex((task) => task.id === id);    
+    const indexTaskToRemove = localTasks.findIndex((task) => task.id === id);
     const [taskRemoved] = localTasks.splice(indexTaskToRemove, 1);
 
     // await removeFile({ fileFormat: dbFileFormat, fileName: dbFileName });
@@ -80,5 +80,37 @@ export class ListTaskRepository implements IListTaskRepository {
 export class GetTaskCountRepository implements GetTaskCountRepository {
   async execute(): Promise<number> {
     return localTasks.length;
+  }
+}
+
+export class SetTaskDoneRepository implements ISetTaskDoneRepository {
+  async execute(id: number): Promise<TaskDTO | null> {
+    const indexTaskToSetDone = localTasks.findIndex((task) => task.id === id);
+    const taskToUpdate = localTasks[indexTaskToSetDone];
+
+    console.log("[taskToSetDone]", taskToUpdate);
+
+    if (indexTaskToSetDone < 0) {
+      console.log("Task not found");
+
+      return null;
+    }
+
+    const updatedTask = { ...taskToUpdate, status: "done" };
+
+    delete localTasks[indexTaskToSetDone];
+    localTasks[indexTaskToSetDone] = updatedTask;
+
+    return localTasks[indexTaskToSetDone];
+  }
+}
+
+export class FilterTaskByKeywordRepository implements IFilterTaskByKeywordRepository {
+  async execute(keyword: string): Promise<ListTaskDTO> {
+    const filteredTitles = localTasks.filter((task) => task.title.includes(keyword));
+    const filteredDescriptions = localTasks.filter((task) => task.description.includes(keyword));
+    const filteredTasks = new Set([...filteredTitles, ...filteredDescriptions]);
+
+    return { tasks: [...filteredTasks], count: filteredTasks.size };
   }
 }

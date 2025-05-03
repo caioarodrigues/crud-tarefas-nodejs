@@ -1,8 +1,7 @@
 export interface BaseCreateTaskDTO {
   title: string;
   description: string;
-  status: string,
-  done: boolean,
+  status: string;
 }
 
 export interface CreateTaskDTO extends BaseCreateTaskDTO {

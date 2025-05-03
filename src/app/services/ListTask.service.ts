@@ -8,10 +8,12 @@ export class ListTaskService {
     this.listTaskUseCase = new ListTaskUseCase(listTaskRepository);
   }
 
-  async listAll(): Promise<void> {
+  async listAll() {
     const result = await this.listTaskUseCase.execute();
 
     console.log("\n[ListTaskService] Tasks:", result.tasks);
     console.log("\n[ListTaskService] Tasks Count:", result.count);
+
+    return result;
   }
 }

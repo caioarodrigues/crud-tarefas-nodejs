@@ -7,7 +7,6 @@ export class Task {
   public status: string;
   public createdAt: Date;
   public updatedAt: Date | null;
-  public done: boolean;
 
   constructor({
     id,
@@ -15,7 +14,6 @@ export class Task {
     description,
     status,
     createdAt,
-    done,
     updatedAt,
   }: CreateTaskDTO) {
     this.id = id;
@@ -24,6 +22,5 @@ export class Task {
     this.status = status;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
-    this.done = done;
   }
 }
