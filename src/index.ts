@@ -69,7 +69,8 @@ async function main() {
         const removedTask = await removeTaskUseCase.execute(id);
         console.log("Task removed:", removedTask);
       }
-    } catch {
+    } catch (error) {
+      console.error("An error occurred:", error);
       break;
     }
   }

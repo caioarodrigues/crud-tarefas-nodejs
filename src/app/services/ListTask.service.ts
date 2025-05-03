@@ -11,7 +11,7 @@ export class ListTaskService {
   async listAll(): Promise<void> {
     const result = await this.listTaskUseCase.execute();
 
-    console.log("\n[ListTaskService] Tasks:");
-    console.log(result.tasks);
+    console.log("\n[ListTaskService] Tasks:", result.tasks);
+    console.log("\n[ListTaskService] Tasks Count:", result.count);
   }
 }

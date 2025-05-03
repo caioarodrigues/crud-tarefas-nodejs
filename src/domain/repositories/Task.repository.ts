@@ -8,7 +8,7 @@ export interface ICreateTaskRepository {
 }
 
 export interface IRemoveTaskRepository {
-  execute(id: number): Promise<Task>;
+  execute(id: number): Promise<Task | null>;
 }
 
 export interface IListTaskRepository {
