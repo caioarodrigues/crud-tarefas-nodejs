@@ -62,3 +62,9 @@ export class ListTaskRepository implements IListTaskRepository {
     return tasks;
   }
 }
+
+export class GetTaskCountRepository implements GetTaskCountRepository {
+  async execute(): Promise<number> {
+    return localTasks.length;
+  }
+}

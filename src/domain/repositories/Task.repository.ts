@@ -13,3 +13,7 @@ export interface IRemoveTaskRepository {
 export interface IListTaskRepository {
   execute(): Promise<Task[]>;
 }
+
+export interface IGetTaskCountRepository {
+  execute(): Promise<number>;
+}

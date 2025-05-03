@@ -1,5 +1,5 @@
 interface ITask {
-  id: number;
+  id?: number;
   title: string;
   description: string;
   status: string;
@@ -9,13 +9,13 @@ interface ITask {
 }
 
 export class Task {
-  public readonly id: number;
-  public readonly title: string;
-  public readonly description: string;
-  public readonly status: string;
-  public readonly createdAt: Date;
-  public readonly updatedAt?: Date;
-  public readonly done: boolean;
+  public id?: number;
+  public title: string;
+  public description: string;
+  public status: string;
+  public createdAt: Date;
+  public updatedAt?: Date;
+  public done: boolean;
 
   constructor({
     id,
