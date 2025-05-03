@@ -1,11 +1,12 @@
-import { IListTaskRepository } from "@/domain/repositories/Task.repository";
 import { ListTaskUseCase } from "../usecases/ListTask/ListTaskUseCase";
 import { IListTaskUseCase } from "../usecases/ListTask/IListTaskUseCase";
+import { ListTaskRepository } from "@/infra/impl/repositories/Task.repository";
 
 export class ListTaskService {
   private listTaskUseCase: IListTaskUseCase;
-  constructor(private listTaskRepository: IListTaskRepository) {
-    this.listTaskUseCase = new ListTaskUseCase(listTaskRepository);
+
+  constructor() {
+    this.listTaskUseCase = new ListTaskUseCase(new ListTaskRepository());
   }
 
   async listAll() {

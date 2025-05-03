@@ -1,21 +1,16 @@
 import { CreateTaskUseCase } from "../usecases/CreateTask/CreateTaskUseCase";
 import { Task } from "@/domain/entities/Task";
 import { GetTaskCountUseCase } from "../usecases/GetTasksCount/GetTaskCountUseCase";
-import { ICreateTaskRepository, IGetTaskCountRepository } from "@/domain/repositories/Task.repository";
 import { BaseCreateTaskDTO, CreateTaskDTO } from "../DTOs/CreateTaskDTO";
-
-interface ICreateTaskServiceProperties {
-  createTaskRepository: ICreateTaskRepository;
-  getTaskCountRepository: IGetTaskCountRepository;
-}
+import { CreateTaskRepository, GetTaskCountRepository } from "@/infra/impl/repositories/Task.repository";
 
 export class CreateTaskService {
   private createTaskUseCase: CreateTaskUseCase;
   private getTaskCountUseCase: GetTaskCountUseCase;
 
-  constructor({ createTaskRepository, getTaskCountRepository }: ICreateTaskServiceProperties) {
-    this.createTaskUseCase = new CreateTaskUseCase(createTaskRepository);
-    this.getTaskCountUseCase = new GetTaskCountUseCase(getTaskCountRepository);
+  constructor() {
+    this.createTaskUseCase = new CreateTaskUseCase(new CreateTaskRepository());
+    this.getTaskCountUseCase = new GetTaskCountUseCase(new GetTaskCountRepository());
   }
 
   async create(task: BaseCreateTaskDTO): Promise<Task> {

@@ -1,31 +1,18 @@
 import inquirer from "inquirer";
-import { CreateTaskService } from "./app/services/CreateTask.service";
-import { CreateTaskRepository } from "@/infra/impl/repositories/Task.repository.js";
 import { validOptions } from "@/domain/constants/options.js";
+import { FilterTaskByKeywordService } from "./app/services/FilterTaskByKeyword.service";
+import { RemoveTaskService } from "./app/services/RemoveTask.service";
+import { SetTaskDoneService } from "./app/services/SetTaskDone.service";
+import { UpdateTaskService } from "./app/services/UpdateTask.service";
+import { CreateTaskService } from "./app/services/CreateTask.service";
 import { ListTaskService } from "./app/services/ListTask.service";
-import { ListTaskRepository } from "@/infra/impl/repositories/Task.repository.js";
-import { RemoveTaskUseCase } from "./app/usecases/RemoveTask/RemoveTaskUseCase";
-import { RemoveTaskRepository } from "@/infra/impl/repositories/Task.repository.js";
-import { GetTaskCountRepository } from "@/infra/impl/repositories/Task.repository.js";
-import { SetTaskDoneRepository } from "@/infra/impl/repositories/Task.repository.js";
-import { SetTaskDoneUseCase } from "./app/usecases/SetTaskDone/SetTaskDoneUseCase";
-import { FilterByKeywordUseCase } from "./app/usecases/FilterByKeyWord/FilterByKeyWord";
-import { FilterTaskByKeywordRepository } from "@/infra/impl/repositories/Task.repository.js";
-import { UpdateTaskUseCase } from "./app/usecases/UpdateTask/UpdateTaskUseCase";
-import { UpdateTaskRepository } from "@/infra/impl/repositories/Task.repository.js";
 
-const updateTaskUseCase = new UpdateTaskUseCase(new UpdateTaskRepository());
-const createTaskService = new CreateTaskService({
-  createTaskRepository: new CreateTaskRepository(),
-  getTaskCountRepository: new GetTaskCountRepository(),
-});
-
-const setTaskDoneUseCase = new SetTaskDoneUseCase(new SetTaskDoneRepository());
-const filterTaskByKeywordUseCase = new FilterByKeywordUseCase(
-  new FilterTaskByKeywordRepository()
-);
-const listTaskService = new ListTaskService(new ListTaskRepository());
-const removeTaskUseCase = new RemoveTaskUseCase(new RemoveTaskRepository());
+const listTaskService = new ListTaskService();
+const createTaskService = new CreateTaskService();
+const filterTaskByKeywordService = new FilterTaskByKeywordService();
+const removeTaskService = new RemoveTaskService();
+const setTaskDoneService = new SetTaskDoneService();
+const updateTaskService = new UpdateTaskService();
 
 async function main() {
   while (true) {
@@ -94,7 +81,7 @@ async function main() {
           },
         ]);
 
-        const removedTask = await removeTaskUseCase.execute(id);
+        const removedTask = await removeTaskService.execute(id);
         console.log("Task removed:", removedTask);
       }
 
@@ -117,7 +104,7 @@ async function main() {
         ]);
 
         const id = result.split(" - ")[0];
-        const task = await setTaskDoneUseCase.setDone(parseInt(id));
+        const task = await setTaskDoneService.execute(parseInt(id));
 
         console.log("Task set as done:", task);
       }
@@ -131,9 +118,7 @@ async function main() {
           },
         ]);
 
-        const filteredTasks = await filterTaskByKeywordUseCase.filterByKeyword(
-          keyword
-        );
+        const filteredTasks = await filterTaskByKeywordService.execute(keyword);
         console.log("Filtered tasks:", filteredTasks);
       }
 
@@ -183,7 +168,7 @@ async function main() {
             },
           ]);
 
-          const updatedTask = await updateTaskUseCase.execute({
+          const updatedTask = await updateTaskService.execute({
             id,
             status: taskToUpdate.status,
             title,
@@ -202,7 +187,7 @@ async function main() {
             },
           ]);
 
-          const updatedTask = await updateTaskUseCase.execute({
+          const updatedTask = await updateTaskService.execute({
             id,
             status: taskToUpdate.status,
             title: taskToUpdate.title,
@@ -222,7 +207,7 @@ async function main() {
             },
           ]);
 
-          const updatedTask = await updateTaskUseCase.execute({
+          const updatedTask = await updateTaskService.execute({
             id,
             status,
             description: taskToUpdate.description,
