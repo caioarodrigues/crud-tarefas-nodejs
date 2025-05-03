@@ -51,17 +51,14 @@ export class RemoveTaskRepository implements IRemoveTaskRepository {
       return null;
     }
 
-
-    const filteredTasks = localTasks.filter((task, index) => index !== id);
-
-    console.log("Filtered tasks:", filteredTasks);
-    // localTasks = filteredTasks;
+    const indexTaskToRemove = localTasks.findIndex((task) => task.id === id);    
+    const [taskRemoved] = localTasks.splice(indexTaskToRemove, 1);
 
     // await removeFile({ fileFormat: dbFileFormat, fileName: dbFileName });
     // await createFile({ fileFormat: dbFileFormat, fileName: dbFileName, content: JSON.stringify(localTasks, null, 2) });
 
     //return taskToRemove as Task;
-    return localTasks[id];
+    return taskRemoved;
   }
 }
 
@@ -73,10 +70,10 @@ export class ListTaskRepository implements IListTaskRepository {
       return { tasks: [], count: 0 };
     }
 
-    const tasks = await fileOperations.read();
-    const count = tasks.length;
+    //const tasks = await fileOperations.read();
+    //const count = tasks.length;
 
-    return { tasks, count };
+    return { tasks: localTasks, count: localTasks.length };
   }
 }
 

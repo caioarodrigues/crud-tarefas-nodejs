@@ -10,7 +10,7 @@ export class RemoveTaskUseCase implements IRemoveTaskUseCase {
     this.removeTaskRepository = removeTaskRepository;
   }
 
-  async execute(id: number): Promise<Task> {
+  async execute(id: number): Promise<Task | null> {
     return await this.removeTaskRepository.execute(id);
   }
 }
