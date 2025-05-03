@@ -4,6 +4,7 @@ import {
   IListTaskRepository,
   IRemoveTaskRepository,
   ISetTaskDoneRepository,
+  IUpdateTaskRepository,
 } from "@/domain/repositories/Task.repository.js";
 import { Task } from "@/domain/entities/Task.js";
 import { verifyExistenceOfFile, createFile, removeFile } from "@/app/utils/FileOperations";
@@ -112,5 +113,20 @@ export class FilterTaskByKeywordRepository implements IFilterTaskByKeywordReposi
     const filteredTasks = new Set([...filteredTitles, ...filteredDescriptions]);
 
     return { tasks: [...filteredTasks], count: filteredTasks.size };
+  }
+}
+
+export class UpdateTaskRepository implements IUpdateTaskRepository {
+  async execute(task: Pick<Task, "id" | "title" | "description" | "status">): Promise<TaskDTO> {
+    const indexTaskToUpdate = localTasks.findIndex((task) => task.id === task.id);
+    const taskToUpdate = localTasks[indexTaskToUpdate];
+
+    taskToUpdate.status = task.status;
+    taskToUpdate.title = task.title;
+    taskToUpdate.description = task.description;
+
+    localTasks[indexTaskToUpdate] = taskToUpdate;
+
+    return taskToUpdate;
   }
 }

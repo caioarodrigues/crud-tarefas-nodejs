@@ -1,9 +1,9 @@
 export const validOptions = [
   "create",
   "list",
+  "update",
   "remove",
   "set as done",
-  "set as pending",
   "filter by keyword",
   "exit",
 ];

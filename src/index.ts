@@ -11,14 +11,19 @@ import { SetTaskDoneRepository } from "@/infra/impl/repositories/Task.repository
 import { SetTaskDoneUseCase } from "./app/usecases/SetTaskDone/SetTaskDoneUseCase";
 import { FilterByKeywordUseCase } from "./app/usecases/FilterByKeyWord/FilterByKeyWord";
 import { FilterTaskByKeywordRepository } from "@/infra/impl/repositories/Task.repository.js";
+import { UpdateTaskUseCase } from "./app/usecases/UpdateTask/UpdateTaskUseCase";
+import { UpdateTaskRepository } from "@/infra/impl/repositories/Task.repository.js";
 
+const updateTaskUseCase = new UpdateTaskUseCase(new UpdateTaskRepository());
 const createTaskService = new CreateTaskService({
   createTaskRepository: new CreateTaskRepository(),
   getTaskCountRepository: new GetTaskCountRepository(),
 });
 
 const setTaskDoneUseCase = new SetTaskDoneUseCase(new SetTaskDoneRepository());
-const filterTaskByKeywordUseCase = new FilterByKeywordUseCase(new FilterTaskByKeywordRepository());
+const filterTaskByKeywordUseCase = new FilterByKeywordUseCase(
+  new FilterTaskByKeywordRepository()
+);
 const listTaskService = new ListTaskService(new ListTaskRepository());
 const removeTaskUseCase = new RemoveTaskUseCase(new RemoveTaskRepository());
 
@@ -95,8 +100,12 @@ async function main() {
 
       if (choice === "set as done") {
         const undoneTasks = await listTaskService.listAll();
-        const shownTasks = undoneTasks.tasks.filter((task) => task.status !== "done")
-          .map(({ title, id, description }) => `${id} - ${title} \n\t ${description}`);
+        const shownTasks = undoneTasks.tasks
+          .filter((task) => task.status !== "done")
+          .map(
+            ({ title, id, description }) =>
+              `${id} - ${title} \n\t ${description}`
+          );
 
         const { result } = await inquirer.prompt([
           {
@@ -122,8 +131,106 @@ async function main() {
           },
         ]);
 
-        const filteredTasks = await filterTaskByKeywordUseCase.filterByKeyword(keyword);
+        const filteredTasks = await filterTaskByKeywordUseCase.filterByKeyword(
+          keyword
+        );
         console.log("Filtered tasks:", filteredTasks);
+      }
+
+      if (choice === "update") {
+        const tasks = await listTaskService.listAll();
+
+        if (tasks.count === 0) {
+          console.log("\nNo tasks available to update\n");
+          continue;
+        }
+
+        const { task } = await inquirer.prompt([
+          {
+            type: "select",
+            name: "task",
+            message: "Select the task to update",
+            choices: tasks.tasks.map(
+              ({ title, id, description }) =>
+                `${id} - ${title} \n\t ${description}`
+            ),
+          },
+        ]);
+
+        const { field } = await inquirer.prompt([
+          {
+            type: "list",
+            name: "field",
+            message: "Select the task field to update",
+            choices: ["title", "description", "status"],
+          },
+        ]);
+
+        const id = parseInt(task.split(" - ")[0]);
+        const taskToUpdate = tasks.tasks.find((task) => task.id === id);
+
+        if (!taskToUpdate) {
+          console.log("Task not found");
+          continue;
+        }
+
+        if (field === "title") {
+          const { title } = await inquirer.prompt([
+            {
+              type: "input",
+              name: "title",
+              message: "Enter the new task title",
+            },
+          ]);
+
+          const updatedTask = await updateTaskUseCase.execute({
+            id,
+            status: taskToUpdate.status,
+            title,
+            description: taskToUpdate.description,
+          });
+
+          console.log("Task updated:", updatedTask);
+        }
+
+        if (field === "description") {
+          const { description } = await inquirer.prompt([
+            {
+              type: "input",
+              name: "description",
+              message: "Enter the new task description",
+            },
+          ]);
+
+          const updatedTask = await updateTaskUseCase.execute({
+            id,
+            status: taskToUpdate.status,
+            title: taskToUpdate.title,
+            description,
+          });
+
+          console.log("Task updated:", updatedTask);
+        }
+
+        if (field === "status") {
+          const { status } = await inquirer.prompt([
+            {
+              type: "list",
+              name: "status",
+              message: "Select the new task status",
+              choices: ["pending", "completed"],
+            },
+          ]);
+
+          const updatedTask = await updateTaskUseCase.execute({
+            id,
+            status,
+            description: taskToUpdate.description,
+            title: taskToUpdate.title,
+          });
+
+          console.log("Task updated:", updatedTask);
+        }
       }
     } catch (error) {
       console.error("An error occurred:", error);
