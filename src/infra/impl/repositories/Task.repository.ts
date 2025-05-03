@@ -6,6 +6,8 @@ import {
 import { Task } from "@/domain/entities/Task.js";
 import { verifyExistenceOfFile, createFile, readFile, removeFile } from "@/app/utils/FileOperations";
 import { dbFileName, dbFileFormat } from "@/domain/constants/files";
+import { TaskDTO } from "@/app/DTOs/TaskDTO";
+import { ListTaskDTO } from "@/app/DTOs/ListTaskDTO";
 
 let localTasks: Task[] = [];
 
@@ -50,16 +52,17 @@ export class RemoveTaskRepository implements IRemoveTaskRepository {
 }
 
 export class ListTaskRepository implements IListTaskRepository {
-  async execute(): Promise<Task[]> {
+  async execute(): Promise<ListTaskDTO> {
     const dbExists = await verifyExistenceOfFile({ fileFormat: dbFileFormat, fileName: dbFileName });
 
     if (!dbExists) {
-      return [];
+      return { tasks: [], count: 0 };
     }
 
-    const tasks = await readFile({ fileFormat: dbFileFormat, fileName: dbFileName });
+    const tasks: TaskDTO[] = await readFile({ fileFormat: dbFileFormat, fileName: dbFileName });
+    const count = tasks.length;
 
-    return tasks;
+    return { tasks, count };
   }
 }
 

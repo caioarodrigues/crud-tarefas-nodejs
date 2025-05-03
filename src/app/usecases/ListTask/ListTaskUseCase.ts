@@ -1,5 +1,5 @@
 import { IListTaskUseCase } from "@/app/usecases/ListTask/IListTaskUseCase.js";
-import { ListTaskDTO } from "./ListTaskDTO.js";
+import { ListTaskDTO } from "../../DTOs/ListTaskDTO.js";
 import { IListTaskRepository } from "../../../domain/repositories/Task.repository.js";
 
 export class ListTaskUseCase implements IListTaskUseCase {
@@ -9,9 +9,9 @@ export class ListTaskUseCase implements IListTaskUseCase {
     this.listTaskRepository = listTaskRepository;
   }
 
-  async execute(): Promise<ListTaskDTO[]> {
-    const tasks = await this.listTaskRepository.execute();
+  async execute(): Promise<ListTaskDTO> {
+    const result: ListTaskDTO = await this.listTaskRepository.execute();
 
-    return tasks;
+    return result;
   }
 }

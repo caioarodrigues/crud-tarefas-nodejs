@@ -8,4 +8,5 @@ export interface BaseCreateTaskDTO {
 export interface CreateTaskDTO extends BaseCreateTaskDTO {
   id: number;
   createdAt: Date,
+  updatedAt: null;
 }

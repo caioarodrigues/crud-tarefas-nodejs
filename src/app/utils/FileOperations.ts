@@ -2,6 +2,7 @@ import * as path from 'path';
 import { promises as fs } from 'fs';
 import { BaseFileOperations, CreateTaskFileOperations, UpdateTaskFileOperations } from './IFileOperations';
 import { Task } from '@/domain/entities/Task';
+import { TaskDTO } from '../DTOs/TaskDTO';
 
 
 export function resolveFilePath({ fileName, fileFormat }: BaseFileOperations): string {
@@ -38,7 +39,7 @@ export async function readFile({ fileName, fileFormat }: BaseFileOperations): Pr
 
   try {
     const data = await fs.readFile(filePath, 'utf-8');
-    return JSON.parse(data) as Task[];
+    return JSON.parse(data) as TaskDTO[];
   } catch (error) {
     throw new Error("Error reading file:" + error);
   }

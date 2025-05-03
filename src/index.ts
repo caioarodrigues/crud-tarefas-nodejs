@@ -2,7 +2,7 @@ import inquirer from "inquirer";
 import { CreateTaskService } from "./app/services/CreateTask.service";
 import { CreateTaskRepository } from "@/infra/impl/repositories/Task.repository.js";
 import { validOptions } from "@/domain/constants/options.js";
-import { ListTaskCLIUseCase } from "./app/usecases/ListTask/CLI/ListTaskCLIUseCase";
+import { ListTaskService } from "./app/services/ListTask.service";
 import { ListTaskRepository } from "@/infra/impl/repositories/Task.repository.js";
 import { RemoveTaskUseCase } from "./app/usecases/RemoveTask/RemoveTaskUseCase";
 import { RemoveTaskRepository } from "@/infra/impl/repositories/Task.repository.js";
@@ -14,7 +14,7 @@ const createTaskService = new CreateTaskService({
   getTaskCountRepository: new GetTaskCountRepository(),
 });
 
-const listTaskUseCase = new ListTaskCLIUseCase(new ListTaskRepository());
+const listTaskService = new ListTaskService(new ListTaskRepository());
 const removeTaskUseCase = new RemoveTaskUseCase(new RemoveTaskRepository());
 
 
@@ -54,7 +54,7 @@ async function main() {
       }
 
       if (choice === "list") {
-        listTaskUseCase.execute();
+        listTaskService.listAll();
       }
 
       if (choice === "remove") {

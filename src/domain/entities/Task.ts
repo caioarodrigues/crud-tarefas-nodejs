@@ -1,20 +1,12 @@
-interface ITask {
-  id?: number;
-  title: string;
-  description: string;
-  status: string;
-  createdAt: Date;
-  updatedAt?: Date;
-  done: boolean;
-}
+import { CreateTaskDTO } from "@/app/DTOs/CreateTaskDTO";
 
 export class Task {
-  public id?: number;
+  public id: number;
   public title: string;
   public description: string;
   public status: string;
   public createdAt: Date;
-  public updatedAt?: Date;
+  public updatedAt: Date | null;
   public done: boolean;
 
   constructor({
@@ -25,7 +17,7 @@ export class Task {
     createdAt,
     done,
     updatedAt,
-  }: ITask) {
+  }: CreateTaskDTO) {
     this.id = id;
     this.title = title;
     this.description = description;

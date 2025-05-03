@@ -24,6 +24,7 @@ export class CreateTaskService {
       ...task,
       id: taskCount,
       createdAt: new Date(),
+      updatedAt: null,
     };
 
     return this.createTaskUseCase.execute(createTask);
