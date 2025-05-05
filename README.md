@@ -62,7 +62,7 @@ Esta aplicação de terminal, desenvolvida em Node.js, permite cadastrar, listar
 1. Clone o repositório  
    ```bash
    git clone https://github.com/caioarodrigues/crud-tarefas-nodejs.git
-   cd tecnologias-web-ii
+   cd crud-tarefas-nodejs
 
 2. Procure o diretório e execute 
    ```bash
